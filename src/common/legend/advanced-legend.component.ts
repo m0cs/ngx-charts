@@ -15,18 +15,20 @@ import { formatLabel } from '../label.helper';
   selector: 'ngx-charts-advanced-legend',
   template: `
     <div class="advanced-pie-legend" [style.width.px]="width">
-      <div
-        *ngIf="animations"
-        class="total-value"
-        ngx-charts-count-up
-        [countTo]="roundedTotal"
-        [valueFormatting]="valueFormatting"
-      ></div>
-      <div class="total-value" *ngIf="!animations">
-        {{ valueFormatting ? valueFormatting(roundedTotal) : defaultValueFormatting(roundedTotal) }}
-      </div>
-      <div class="total-label">
-        {{ label }}
+      <div class="total-value-container" (click)="select.emit(totalJson)">
+        <div
+          *ngIf="animations"
+          class="total-value"
+          ngx-charts-count-up
+          [countTo]="roundedTotal"
+          [valueFormatting]="valueFormatting"
+        ></div>
+        <div class="total-value" *ngIf="!animations">
+          {{ valueFormatting ? valueFormatting(roundedTotal) : defaultValueFormatting(roundedTotal) }}
+        </div>
+        <div class="total-label">
+          {{ label }}
+        </div>
       </div>
       <div class="legend-items-container">
         <div class="legend-items">
@@ -80,6 +82,10 @@ export class AdvancedLegendComponent implements OnChanges {
 
   legendItems: any[] = [];
   total: number;
+  totalJson = {
+    name: '',
+    value: 0
+  };
   roundedTotal: number;
 
   @Input() valueFormatting: (value: number) => any;
@@ -98,9 +104,12 @@ export class AdvancedLegendComponent implements OnChanges {
 
   update(): void {
     this.total = this.getTotal();
+
     this.roundedTotal = this.total;
 
     this.legendItems = this.getLegendItems();
+    this.totalJson['name'] = this.label;
+    this.totalJson['value'] = this.total;
   }
 
   getLegendItems(): any {
