@@ -68,7 +68,7 @@ export class PieChartComponent extends BaseChartComponent {
   @Input() activeEntries: any[] = [];
   @Input() tooltipDisabled: boolean = false;
   @Input() labelFormatting: any;
-  @Input() trimLabels: boolean = true;
+  @Input() trimLabels: boolean = false;
   @Input() maxLabelLength: number = 10;
   @Input() tooltipText: any;
   @Output() dblclick = new EventEmitter();
