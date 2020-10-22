@@ -29,6 +29,8 @@ import { DataItem } from '../models/chart-data.model';
               [activeEntries]="activeEntries"
               [outerRadius]="outerRadius"
               [gradient]="gradient"
+              [trimLabels]="trimLabels"
+              [maxLabelLength]="maxLabelLength"
               [tooltipDisabled]="tooltipDisabled"
               [tooltipTemplate]="tooltipTemplate"
               [tooltipText]="tooltipText"
@@ -49,6 +51,8 @@ import { DataItem } from '../models/chart-data.model';
           [animations]="animations"
           [valueFormatting]="valueFormatting"
           [labelFormatting]="nameFormatting"
+          [trimLabels]="trimLabels"
+          [maxLabelLength]="maxLabelLength"
           [percentageFormatting]="percentageFormatting"
           (select)="onClick($event)"
           (activate)="onActivate($event, true)"
@@ -68,6 +72,9 @@ export class AdvancedPieChartComponent extends BaseChartComponent {
   @Input() tooltipDisabled: boolean = false;
   @Input() tooltipText: any;
   @Input() label: string = 'Total';
+  // trim label mod
+  @Input() trimLabels: boolean = false;
+  @Input() maxLabelLength: number = 20;
 
   @Output() activate: EventEmitter<any> = new EventEmitter();
   @Output() deactivate: EventEmitter<any> = new EventEmitter();

@@ -76,6 +76,9 @@ export class AdvancedLegendComponent implements OnChanges {
   @Input() colors;
   @Input() label: string = 'Total';
   @Input() animations: boolean = true;
+  // trim label mod
+  @Input() trimLabels: boolean = false;
+  @Input() maxLabelLength: number = 20;
 
   @Output() select: EventEmitter<any> = new EventEmitter();
   @Output() activate: EventEmitter<any> = new EventEmitter();
@@ -128,7 +131,8 @@ export class AdvancedLegendComponent implements OnChanges {
         value,
         color,
         label: formattedLabel,
-        displayLabel: trimLabel(formattedLabel, 20),
+        // trim label mod
+        displayLabel: this.trimLabels ? trimLabel(formattedLabel, this.maxLabelLength) : formattedLabel,
         origialLabel: d.name,
         percentage: this.percentageFormatting ? this.percentageFormatting(percentage) : percentage.toLocaleString()
       };
