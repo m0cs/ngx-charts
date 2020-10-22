@@ -15,18 +15,21 @@ import { formatLabel } from '../label.helper';
   selector: 'ngx-charts-advanced-legend',
   template: `
     <div class="advanced-pie-legend" [style.width.px]="width">
-      <div
-        *ngIf="animations"
-        class="total-value"
-        ngx-charts-count-up
-        [countTo]="roundedTotal"
-        [valueFormatting]="valueFormatting"
-      ></div>
-      <div class="total-value" *ngIf="!animations">
-        {{ valueFormatting ? valueFormatting(roundedTotal) : defaultValueFormatting(roundedTotal) }}
-      </div>
-      <div class="total-label">
-        {{ label }}
+      <!-- total clickable mod -->
+      <div class="total-value-container" (click)="select.emit(totalJson)">
+        <div
+          *ngIf="animations"
+          class="total-value"
+          ngx-charts-count-up
+          [countTo]="roundedTotal"
+          [valueFormatting]="valueFormatting"
+        ></div>
+        <div class="total-value" *ngIf="!animations">
+          {{ valueFormatting ? valueFormatting(roundedTotal) : defaultValueFormatting(roundedTotal) }}
+        </div>
+        <div class="total-label">
+          {{ label }}
+        </div>
       </div>
       <div class="legend-items-container">
         <div class="legend-items">
@@ -73,6 +76,9 @@ export class AdvancedLegendComponent implements OnChanges {
   @Input() colors;
   @Input() label: string = 'Total';
   @Input() animations: boolean = true;
+  // trim label mod
+  @Input() trimLabels: boolean = false;
+  @Input() maxLabelLength: number = 20;
 
   @Output() select: EventEmitter<any> = new EventEmitter();
   @Output() activate: EventEmitter<any> = new EventEmitter();
@@ -80,6 +86,10 @@ export class AdvancedLegendComponent implements OnChanges {
 
   legendItems: any[] = [];
   total: number;
+  totalJson = {
+    name: '',
+    value: 0
+  };
   roundedTotal: number;
 
   @Input() valueFormatting: (value: number) => any;
@@ -101,6 +111,10 @@ export class AdvancedLegendComponent implements OnChanges {
     this.roundedTotal = this.total;
 
     this.legendItems = this.getLegendItems();
+
+    // total clickable mod
+    this.totalJson['name'] = this.label;
+    this.totalJson['value'] = this.total;
   }
 
   getLegendItems(): any {
@@ -117,7 +131,8 @@ export class AdvancedLegendComponent implements OnChanges {
         value,
         color,
         label: formattedLabel,
-        displayLabel: trimLabel(formattedLabel, 20),
+        // trim label mod
+        displayLabel: this.trimLabels ? trimLabel(formattedLabel, this.maxLabelLength) : formattedLabel,
         origialLabel: d.name,
         percentage: this.percentageFormatting ? this.percentageFormatting(percentage) : percentage.toLocaleString()
       };
